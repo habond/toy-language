@@ -1,8 +1,6 @@
 // Toy Language Grammar
 // A simple imperative programming language with functions, variables, and control flow
 
-?start: program
-
 program: statement*
 
 ?statement:

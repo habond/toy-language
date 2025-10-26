@@ -3,7 +3,7 @@
 This module evaluates the AST and executes the program.
 """
 
-from ast_nodes import (
+from .ast_nodes import (
     Assignment,
     ASTNode,
     BinaryOp,
@@ -23,7 +23,7 @@ from ast_nodes import (
     Variable,
     WhileStatement,
 )
-from environment import Environment, Function, ReturnException, RuntimeValue
+from .environment import Environment, Function, ReturnException, RuntimeValue
 
 
 class Interpreter:

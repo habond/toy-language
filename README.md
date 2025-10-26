@@ -1,15 +1,20 @@
 # Toy Programming Language
 
-A minimal imperative programming language with functions, variables, and basic control flow. This language is designed as a learning project for understanding lexing, parsing, and evaluation.
+A minimal imperative programming language interpreter with support for functions, closures, variables, and control flow. This project demonstrates the implementation of a complete interpreter pipeline: lexing, parsing, AST construction, and tree-walking evaluation.
+
+Built with Python, Lark parser generator, and comprehensive type hints for educational purposes.
 
 ## Features
 
-- Variables with `let` declarations
-- Functions with parameters and return values
-- Control flow: `if/else`, `while`
-- Data types: numbers, strings, booleans, nil
-- Operators: arithmetic (+, -, *, /), comparison (<, >, ==, !=)
-- Comments with `//`
+- Variables with `let` declarations and reassignment
+- Functions with parameters, return values, and closures
+- Recursive function calls
+- Control flow: `if/else` conditionals, `while` loops
+- Data types: numbers (float), strings, booleans, nil
+- Operators: arithmetic (+, -, *, /), comparison (<, >), equality (==, !=), unary negation (-)
+- Single-line comments with `//`
+- String concatenation with `+` operator
+- Built-in `print()` function with multi-argument support
 
 ## Syntax Guide
 
@@ -32,11 +37,12 @@ name = "Bob";
 
 ### Data Types
 
-**Numbers**: Integers and floats
+**Numbers**: Integers and floats (stored internally as floats)
 ```
 let integer = 42;
 let decimal = 3.14;
 let negative = -17;
+let expression = -(10 + 5);  // Unary negation
 ```
 
 **Strings**: Text in single or double quotes
@@ -99,6 +105,19 @@ let result = add(5, 3);
 let message = greet("Alice");
 ```
 
+### Built-in Functions
+
+**print()**: Outputs values to the console (accepts multiple arguments)
+
+```
+print("Hello, World!");
+print("Sum:", 10 + 5);
+print("Multiple", "arguments", "separated", "by", "spaces");
+
+let x = 42;
+print("The answer is", x);  // Output: The answer is 42
+```
+
 ### Control Flow
 
 **If/Else**:
@@ -119,7 +138,43 @@ while (i < 5) {
 }
 ```
 
+### Comments
+
+Single-line comments start with `//`:
+
+```
+// This is a comment
+let x = 42;  // Comments can also go at the end of lines
+
+// Multi-line comments are not supported
+// Use multiple single-line comments instead
+```
+
+### String Concatenation
+
+Strings can be concatenated using the `+` operator:
+
+```
+let name = "Alice";
+let greeting = "Hello, " + name + "!";
+print(greeting);  // Output: Hello, Alice!
+
+// Numbers are automatically converted to strings when concatenating
+let age = 25;
+print(name + " is " + age + " years old");
+```
+
 ## Example Programs
+
+The [examples/](examples/) directory contains working programs that demonstrate various features:
+
+- **[hello_world.toy](examples/hello_world.toy)** - Basic print statement
+- **[functions.toy](examples/functions.toy)** - Function definitions and calls
+- **[loops.toy](examples/loops.toy)** - While loops and conditionals
+- **[fibonacci.toy](examples/fibonacci.toy)** - Recursive and iterative Fibonacci implementations
+- **[closures.toy](examples/closures.toy)** - Demonstrates closure and lexical scoping
+
+Below are additional examples showing the language capabilities:
 
 ### Factorial Function
 
@@ -133,7 +188,7 @@ fn factorial(n) {
 }
 
 let result = factorial(5);
-print(result);  // 120
+print(result);  // Output: 120
 ```
 
 ### Count to Ten
@@ -160,7 +215,7 @@ fn sum_to_n(n) {
 }
 
 let result = sum_to_n(10);
-print(result);  // 55
+print(result);  // Output: 55
 ```
 
 ### Fibonacci Sequence
@@ -192,7 +247,7 @@ fn max(a, b) {
 }
 
 let result = max(42, 17);
-print(result);  // 42
+print(result);  // Output: 42
 ```
 
 ### Temperature Converter
@@ -215,81 +270,168 @@ let temp_c2 = fahrenheit_to_celsius(temp_f2);
 print("77°F is " + temp_c2 + "°C");
 ```
 
+### Closures
+
+Functions capture their defining environment, enabling closures:
+
+```
+fn make_counter() {
+    let count = 0;
+
+    fn increment() {
+        count = count + 1;
+        return count;
+    }
+
+    return increment;
+}
+
+let counter = make_counter();
+print(counter());  // Output: 1
+print(counter());  // Output: 2
+print(counter());  // Output: 3
+```
+
 ## Implementation
 
 This repository includes a fully functional interpreter written in Python with complete type hints:
 
 ### Architecture
 
-- **[ast_nodes.py](ast_nodes.py)** - AST node definitions using dataclasses
-- **[environment.py](environment.py)** - Variable scoping and function closures
-- **[interpreter.py](interpreter.py)** - Parser transformer (ASTBuilder) and interpreter (Interpreter)
-- **[main.py](main.py)** - Entry point with example program
-- **[grammar.lark](grammar.lark)** - Lark grammar specification
+The interpreter is organized into separate, focused modules following clean architecture principles:
+
+```
+toy-language/
+├── src/                    # Core interpreter implementation
+│   ├── ast_nodes.py       # AST node definitions using dataclasses
+│   ├── ast_builder.py     # Transforms Lark parse trees into AST
+│   ├── environment.py     # Variable scoping and closures
+│   └── interpreter.py     # AST evaluation engine
+├── examples/              # Example .toy programs
+├── grammar.lark           # Lark grammar specification
+├── run.py                 # CLI entry point
+└── toy                    # Executable wrapper script
+```
+
+**Key Components:**
+
+- **[src/ast_nodes.py](src/ast_nodes.py)** - AST node definitions using dataclasses for type safety
+- **[src/ast_builder.py](src/ast_builder.py)** - Transforms Lark parse trees into typed AST nodes
+- **[src/environment.py](src/environment.py)** - Variable scoping with lexical closures and function objects
+- **[src/interpreter.py](src/interpreter.py)** - AST evaluation engine with runtime execution
+- **[grammar.lark](grammar.lark)** - Lark grammar specification defining the language syntax
+- **[run.py](run.py)** - Command-line entry point for running .toy files
+- **[toy](toy)** - Bash wrapper script that manages virtual environment and runs programs
 
 ### Features Implemented
 
-✅ **Parse**: Lark parser with grammar-based AST generation
-✅ **Evaluate**: Full AST evaluation with proper type checking
-✅ **Environment**: Lexical scoping with closure support
-✅ **Built-ins**: Built-in `print()` function
+✅ **Parsing**: Lark-based parser with full grammar support
+✅ **AST Building**: Type-safe transformation from parse trees to AST
+✅ **Evaluation**: Complete AST interpreter with proper semantics
+✅ **Lexical Scoping**: Nested environments with closure support
+✅ **Functions**: First-class functions with closures
+✅ **Built-ins**: `print()` function with multi-argument support
 ✅ **Error Handling**: Type errors, name errors, division by zero
-✅ **Type Safety**: Full mypy strict mode compliance with no `Any` types
+✅ **Type Safety**: Full mypy strict mode compliance
 ✅ **Code Quality**: Formatted and linted with Ruff
 
 ### Running the Interpreter
 
+The easiest way to run Toy programs is using the `toy` wrapper script:
+
 ```bash
-# Install dependencies
+# Run a .toy program (automatically sets up venv and dependencies)
+./toy examples/hello_world.toy
+
+# Try other examples
+./toy examples/fibonacci.toy
+./toy examples/closures.toy
+```
+
+Alternatively, you can use Python directly:
+
+```bash
+# Install dependencies manually
 pip install -r requirements.txt
 
-# Run the example program
-python main.py
+# Run with Python
+python3 run.py examples/hello_world.toy
+```
+
+### Creating Programs
+
+Create a file with the `.toy` extension and write your program:
+
+```bash
+# Create a new program
+cat > hello.toy << 'EOF'
+let x = 42;
+print("The answer is:");
+print(x);
+EOF
+
+# Run it
+./toy hello.toy
 ```
 
 ### Development Tools
 
-The project includes linting and formatting configured in [pyproject.toml](pyproject.toml):
+The project includes development tools configured in [pyproject.toml](pyproject.toml):
 
 ```bash
 # Format code
-ruff format .
+ruff format src/ run.py
 
 # Lint code
-ruff check .
+ruff check src/ run.py
 
 # Type check
-mypy .
+mypy src/ run.py
 ```
 
-### Example Program
+All code passes strict type checking with mypy and follows PEP 8 style guidelines.
 
-The interpreter can execute programs like this:
+### Project Structure
 
-```python
-// Factorial function
-fn factorial(n) {
-    if (n < 2) {
-        return 1;
-    } else {
-        return n * factorial(n - 1);
-    }
-}
+The project follows a clean separation of concerns:
 
-let result = factorial(5);
-print("Factorial of 5 is:");
-print(result);  // Output: 120
-```
+- **Parser Layer** ([grammar.lark](grammar.lark)) - Defines syntax and produces parse trees
+- **AST Layer** ([src/ast_nodes.py](src/ast_nodes.py), [src/ast_builder.py](src/ast_builder.py)) - Type-safe abstract syntax tree
+- **Runtime Layer** ([src/environment.py](src/environment.py)) - Manages scoping and closures
+- **Execution Layer** ([src/interpreter.py](src/interpreter.py)) - Evaluates the AST
+- **CLI Layer** ([run.py](run.py), [toy](toy)) - Command-line interface and tooling
+
+### Technical Details
+
+**Parser**: Uses Lark with an LALR(1) parser for efficient parsing of the grammar defined in [grammar.lark](grammar.lark).
+
+**AST Nodes**: All AST nodes are immutable dataclasses defined in [ast_nodes.py](ast_nodes.py), providing type safety and clarity.
+
+**Scoping**: Implements lexical scoping with closures. Functions capture their defining environment, allowing proper closure semantics.
+
+**Type System**: Dynamically typed at runtime but with comprehensive type annotations throughout the codebase. Runtime type checking prevents invalid operations (e.g., cannot add a string and number without explicit conversion).
+
+**Error Messages**: Provides clear error messages for:
+- Parse errors (syntax errors)
+- Name errors (undefined variables)
+- Type errors (invalid operations)
+- Zero division errors
+
+**Execution Model**: Tree-walking interpreter that directly evaluates the AST without compilation or bytecode generation.
 
 ### Possible Extensions
 
-- Add `for` loops for convenience
-- Add arrays/lists for data collections
-- Add more operators (%, <=, >=, &&, ||, !)
-- String interpolation
-- More data types (objects/dictionaries)
-- Lambda functions
-- Import/module system
-- Classes and objects
-- Exception handling (try/catch)
-- Break and continue statements
+Potential features for future development:
+
+- **Control Flow**: `for` loops, `break`, `continue` statements
+- **Operators**: Modulo `%`, less-than-or-equal `<=`, greater-than-or-equal `>=`, logical AND `&&`, OR `||`, NOT `!`
+- **Data Structures**: Arrays/lists, objects/dictionaries, tuples
+- **Advanced Functions**: Lambda/anonymous functions, higher-order functions
+- **String Features**: String interpolation, escape sequences, multi-line strings
+- **Modules**: Import/export system, module namespaces
+- **OOP**: Classes, objects, inheritance, methods
+- **Error Handling**: Exception handling with try/catch/finally
+- **Standard Library**: Math functions, string utilities, file I/O
+- **Optimization**: Bytecode compilation, constant folding, tail call optimization
+
+The current implementation provides a solid foundation for adding these features.

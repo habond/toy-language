@@ -5,9 +5,9 @@ from pathlib import Path
 
 from lark import Lark
 
-from ast_builder import ASTBuilder
-from ast_nodes import Program
-from interpreter import Interpreter
+from src.ast_builder import ASTBuilder
+from src.ast_nodes import Program
+from src.interpreter import Interpreter
 
 
 def load_grammar() -> str:

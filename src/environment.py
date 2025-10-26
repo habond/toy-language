@@ -3,7 +3,7 @@
 from collections.abc import Callable
 from typing import Optional, Union
 
-from ast_nodes import Block
+from .ast_nodes import Block
 
 # Type alias for runtime values (includes built-in functions as callables)
 RuntimeValue = Union[float, str, bool, None, "Function", Callable[..., "RuntimeValue"]]

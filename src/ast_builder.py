@@ -7,7 +7,7 @@ from typing import cast
 
 from lark import Token, Transformer
 
-from ast_nodes import (
+from .ast_nodes import (
     Assignment,
     ASTNode,
     BinaryOp,

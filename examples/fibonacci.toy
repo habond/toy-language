@@ -1,0 +1,43 @@
+// Fibonacci sequence in Toy
+
+// Recursive fibonacci (simple but slow for large numbers)
+fn fib_recursive(n) {
+    if (n < 2) {
+        return n;
+    }
+    return fib_recursive(n - 1) + fib_recursive(n - 2);
+}
+
+print("Fibonacci (recursive):");
+let i = 0;
+while (i < 10) {
+    print("fib(", i, ") =", fib_recursive(i));
+    i = i + 1;
+}
+
+// Iterative fibonacci (faster)
+fn fib_iterative(n) {
+    if (n < 2) {
+        return n;
+    }
+
+    let prev = 0;
+    let current = 1;
+    let count = 2;
+
+    while (count < n + 1) {
+        let next = prev + current;
+        prev = current;
+        current = next;
+        count = count + 1;
+    }
+
+    return current;
+}
+
+print("\nFibonacci (iterative):");
+let j = 0;
+while (j < 15) {
+    print("fib(", j, ") =", fib_iterative(j));
+    j = j + 1;
+}

@@ -1,0 +1,31 @@
+// Loop examples in Toy
+
+// Simple counting loop
+print("Counting from 1 to 5:");
+let i = 1;
+while (i < 6) {
+    print(i);
+    i = i + 1;
+}
+
+// Loop with condition
+print("\nPower of 2 less than 100:");
+let power = 1;
+while (power < 100) {
+    print(power);
+    power = power * 2;
+}
+
+// Loop that breaks early with return
+fn find_first_even(start, max) {
+    let n = start;
+    while (n < max) {
+        if (n == n / 2 * 2) {
+            return n;
+        }
+        n = n + 1;
+    }
+    return nil;
+}
+
+print("\nFirst even number from 7:", find_first_even(7, 20));

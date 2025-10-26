@@ -1,0 +1,40 @@
+// Closure examples in Toy
+// Demonstrates lexical scoping and closures
+
+// Counter with closure
+fn make_counter() {
+    let count = 0;
+
+    fn increment() {
+        count = count + 1;
+        return count;
+    }
+
+    return increment;
+}
+
+let counter = make_counter();
+print("Counter:", counter());
+print("Counter:", counter());
+print("Counter:", counter());
+
+// Another independent counter
+let counter2 = make_counter();
+print("Counter2:", counter2());
+print("Counter2:", counter2());
+
+// Multiplier factory
+fn make_multiplier(factor) {
+    fn multiply(x) {
+        return x * factor;
+    }
+    return multiply;
+}
+
+let double = make_multiplier(2);
+let triple = make_multiplier(3);
+
+print("\nDouble 5:", double(5));
+print("Triple 5:", triple(5));
+print("Double 10:", double(10));
+print("Triple 10:", triple(10));

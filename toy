@@ -1,0 +1,16 @@
+#!/bin/bash
+# Wrapper script to run Toy language files
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Check if virtual environment exists, if not create it and install deps
+if [ ! -d "$SCRIPT_DIR/venv" ]; then
+    echo "Virtual environment not found. Creating and installing dependencies..."
+    python3 -m venv "$SCRIPT_DIR/venv"
+    "$SCRIPT_DIR/venv/bin/pip" install -q -r "$SCRIPT_DIR/requirements.txt"
+    echo "Setup complete."
+fi
+
+# Run with venv python
+"$SCRIPT_DIR/venv/bin/python" "$SCRIPT_DIR/run.py" "$@"

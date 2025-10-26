@@ -1,0 +1,87 @@
+// Toy Language Grammar
+// A simple imperative programming language with functions, variables, and control flow
+
+?start: program
+
+program: statement*
+
+?statement: var_declaration
+          | assignment
+          | function_def
+          | return_statement
+          | if_statement
+          | while_statement
+          | expression_statement
+          | block
+
+// Variable declaration: let x = 5;
+var_declaration: "let" NAME "=" expression ";"
+
+// Assignment: x = 10;
+assignment: NAME "=" expression ";"
+
+// Function definition: fn add(a, b) { return a + b; }
+function_def: "fn" NAME "(" parameters? ")" block
+parameters: NAME ("," NAME)*
+
+// Return statement: return x;
+return_statement: "return" expression? ";"
+
+// If statement: if (x > 5) { ... } else { ... }
+if_statement: "if" "(" expression ")" block ("else" block)?
+
+// While loop: while (x < 10) { ... }
+while_statement: "while" "(" expression ")" block
+
+// Expression statement: function_call();
+expression_statement: expression ";"
+
+// Block: { statement* }
+block: "{" statement* "}"
+
+// Expressions with precedence
+?expression: equality
+
+?equality: comparison
+         | equality "==" comparison  -> eq
+         | equality "!=" comparison  -> neq
+
+?comparison: addition
+           | comparison "<" addition  -> lt
+           | comparison ">" addition  -> gt
+
+?addition: multiplication
+         | addition "+" multiplication  -> add
+         | addition "-" multiplication  -> sub
+
+?multiplication: unary
+               | multiplication "*" unary  -> mul
+               | multiplication "/" unary  -> div
+
+?unary: "-" unary  -> neg
+      | primary
+
+?primary: NUMBER
+        | STRING
+        | BOOLEAN
+        | "nil"
+        | NAME
+        | function_call
+        | "(" expression ")"
+
+// Function call: print("hello");
+function_call: NAME "(" arguments? ")"
+arguments: expression ("," expression)*
+
+// Terminals
+BOOLEAN: "true" | "false"
+STRING: /"[^"]*"/ | /'[^']*'/
+NUMBER: /-?\d+(\.\d+)?/
+NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
+
+// Whitespace and comments
+%import common.WS
+%ignore WS
+
+COMMENT: "//" /[^\n]*/
+%ignore COMMENT

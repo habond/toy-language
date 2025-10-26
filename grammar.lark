@@ -5,14 +5,15 @@
 
 program: statement*
 
-?statement: var_declaration
-          | assignment
-          | function_def
-          | return_statement
-          | if_statement
-          | while_statement
-          | expression_statement
-          | block
+?statement:
+    | var_declaration
+    | assignment
+    | function_def
+    | return_statement
+    | if_statement
+    | while_statement
+    | expression_statement
+    | block
 
 // Variable declaration: let x = 5;
 var_declaration: "let" NAME "=" expression ";"
@@ -40,34 +41,41 @@ expression_statement: expression ";"
 block: "{" statement* "}"
 
 // Expressions with precedence
-?expression: equality
+?expression:
+    | equality
 
-?equality: comparison
-         | equality "==" comparison  -> eq
-         | equality "!=" comparison  -> neq
+?equality:
+    | comparison
+    | equality "==" comparison  -> eq
+    | equality "!=" comparison  -> neq
 
-?comparison: addition
-           | comparison "<" addition  -> lt
-           | comparison ">" addition  -> gt
+?comparison:
+    | addition
+    | comparison "<" addition  -> lt
+    | comparison ">" addition  -> gt
 
-?addition: multiplication
-         | addition "+" multiplication  -> add
-         | addition "-" multiplication  -> sub
+?addition:
+    | multiplication
+    | addition "+" multiplication  -> add
+    | addition "-" multiplication  -> sub
 
-?multiplication: unary
-               | multiplication "*" unary  -> mul
-               | multiplication "/" unary  -> div
+?multiplication:
+    | unary
+    | multiplication "*" unary  -> mul
+    | multiplication "/" unary  -> div
 
-?unary: "-" unary  -> neg
-      | primary
+?unary:
+    | "-" unary  -> neg
+    | primary
 
-?primary: NUMBER
-        | STRING
-        | BOOLEAN
-        | "nil"
-        | NAME
-        | function_call
-        | "(" expression ")"
+?primary:
+    | NUMBER
+    | STRING
+    | BOOLEAN
+    | "nil"
+    | NAME
+    | function_call
+    | "(" expression ")"
 
 // Function call: print("hello");
 function_call: NAME "(" arguments? ")"
